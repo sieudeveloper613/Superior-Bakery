@@ -1,0 +1,23 @@
+export const colors = {
+    PRIMARY: '#4B3B15',
+    PRIMARY_OPACITY_60: 'rgba(75, 59, 21, 0.6)',
+    PRIMARY_OPACITY_20: 'rgba(75, 59, 21, 0.2)',  
+    WHITE: '#FFFFFF',
+    BLACK: '#000000',
+    BLACK_OPACITY_20: 'rgba(0, 0, 0, 0.2)',
+    LIGHT_GREY: '#F2F2F2',
+    GREY: '#D3D3D3',
+    DARK_GREY: '#909090',
+    BLUE: '#0F52BA',
+    BLUE_OPPACITY_30: 'rgba(15,82, 186, 0.3)',
+    TOMATO: '#FF0028',
+    TOMATO_OPACITY_15: 'rgba(255, 0, 0, 0.15)',
+    SHADOW: '#171717',
+    YELLOW: '#FFB906',
+    GREEN: '#1C765A',
+    ORANGE: '#FF5A36',
+    ORANGE_OPACITY_15: 'rgba(255, 90, 54, 0.15)',
+    SILVER: '#C0C0C0',
+    RUBY: '#E0115F',
+    DIAMOND: '#5bb9e2'
+}

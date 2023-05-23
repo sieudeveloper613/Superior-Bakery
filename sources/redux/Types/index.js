@@ -1,0 +1,5 @@
+export const LOGIN_REQUESTED = 'LOGIN_REQUESTED';
+export const LOGIN_ACTION = 'LOGIN_ACTION';
+export const LOGOUT_ACTION = 'LOGOUT_ACTION';
+export const EMAIL_CHECKING = 'EMAIL_CHECKING';
+
