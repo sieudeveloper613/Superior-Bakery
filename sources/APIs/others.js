@@ -2,15 +2,13 @@ import { BASE_URL } from "./url";
 import axios from "axios";
 import { logError, logDebug, logInfo  } from "../utils/console";
 
-const getIntroduction = async () => {
+const onGetIntroduction = async () => {
     try {
-        const getData = await axios.get(`${BASE_URL}/api/introduction`);
-        if(getData) {
-            console.log('introduction-data: ', getData.data);
-            return getData.data
-        }
+        const request = await axios.get(`${BASE_URL}/api/getIntroduction`);
+        return request.data;
     } catch (error) {
-        logError('api-introduction-error: ', error)
+        console.log("on-get-introduction-error: ", error);
+        return;
     }
 }
 
@@ -52,9 +50,49 @@ const updateViewNotification = async (userId, notificationId) => {
     }
 }
 
+const collectVouchers = async () => {
+    try {
+        const onCollect = await axios.get(`${BASE_URL}/api/collect-vouchers`,
+            {
+                headers: {
+                    Accept: "application/json",
+                    "Content'-Type": "application/json"
+                }
+            }
+        );
+        logDebug('collect-vouchers-data: ', onCollect.data);
+        return onCollect.data;
+
+    } catch (error) {
+        logError('collect-vouchers-error: ', error);
+    }
+};
+
+const collectVoucherById = async (voucherId) => {
+    try {
+        logDebug('collect-voucher-by-id-params: ', voucherId);
+        const onCollect = await axios.get(`${BASE_URL}/api/collect-voucher-by-id?voucherId=${voucherId}`,
+            {
+                headers: {
+                    Accept: "application/json",
+                    "Content'-Type": "application/json"
+                }
+            }
+        );
+        logDebug('collect-voucher-by-id-data: ', onCollect.data);
+        return onCollect.data;
+
+    } catch (error) {
+        logError('collect-vouchers-error: ', error);
+    }
+};
+
 export default {
-    getIntroduction,
+    onGetIntroduction,
     collectStore,
     collectNotification,
-    updateViewNotification
+    updateViewNotification,
+    collectVouchers,
+    collectVoucherById
+
 }

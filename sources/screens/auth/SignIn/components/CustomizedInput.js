@@ -28,7 +28,7 @@ const CustomizedInput = ({
                 <Container bgColor={colors.PRIMARY} aCenter jCenter width={48} height={48}>
                     <AntIcon size={24} color={colors.WHITE} name={icon} />
                 </Container>
-                <Input ph={8} body width={password ? "78%" : "86%"} height={"100%"} color={colors.BLACK}
+                <Input ph={8} body width={password ? "72%" : "86%"} height={"100%"} color={colors.BLACK}
                     onFocus={() => {
                         onFocus();
                         setIsFocused(true);
@@ -44,7 +44,7 @@ const CustomizedInput = ({
                 />
                 {
                     password && (
-                        <Button onPress={() => setIsHidePassword(!isHidePassword)}>
+                        <Button onPress={() => setIsHidePassword(!isHidePassword)} ph={8}>
                             <IonIcon size={24} color={colors.PRIMARY} name={isHidePassword ? "eye" : "eye-off"} />
                         </Button>
                     )

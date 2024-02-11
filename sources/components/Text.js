@@ -118,7 +118,7 @@ const Typography = ({
     left && {textAlign: 'left'},
     right && {textAlign: 'right'},
     center && {textAlign: 'center'},
-    justify && {justify: 'justify'},
+    justify && {textAlign: 'justify'},
     lineHeight && {lineHeight: lineHeight},
     letterSpacing && {letterSpacing: letterSpacing},
     underline && {textDecorationLine: 'underline'},

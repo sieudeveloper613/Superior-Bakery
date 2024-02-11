@@ -11,8 +11,9 @@ import { getDBConnection, createTable, collectFavoriteItems, deleteItem } from '
 import { BASE_URL } from '../../../APIs/url'
 import formatMoney from '../../../utils/formatMoney'
 import { logDebug, logError } from '../../../utils/console'
+import { CATEGORY } from '../../../routes/ScreenName'
 
-const Favorite = () => {
+const Favorite = ({ navigation: { navigate }}) => {
   const [more, setMore] = useState(false);
   const [selectedId, setSelectedId ] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
@@ -54,7 +55,9 @@ const Favorite = () => {
   const renderItem = ({ item, index }) => {
     const isSelected = selectedId === item.PRODUCT_ID;
     return (
-      <Container width={'100%'}>
+      <Button 
+        // onPress={() => navigate(CATEGORY.PRODUCT_DETAIL_SCREEN, { item })}
+        key={index} width={'100%'}>
         <Container 
         width={'100%'} height={84} p={12} r={16} mv={8}
         row bgColor={colors.WHITE} shadow aCenter>
@@ -97,7 +100,7 @@ const Favorite = () => {
               </Button>
             </Container>
         }
-      </Container>
+      </Button>
       
     )
   }

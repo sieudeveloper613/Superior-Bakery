@@ -1,286 +1,248 @@
-import React, { useState } from 'react'
-import { KeyboardAvoidingView, Keyboard, ScrollView, StyleSheet, Alert } from 'react-native';
-import { Container, Text, Input, Button, Image } from '../../../components';
-import { colors } from '../../../themes/colors';
-import { images } from '../../../themes/images';
-import { logInfo } from '../../../utils/console';
-import { authorizationApi } from '../../../APIs';
-import AntIcon from 'react-native-vector-icons/AntDesign';
-import IonIcon from 'react-native-vector-icons/Ionicons';
-import { Loading } from '../../../components/custom';
+import React, { useEffect, useState } from "react"
+import { KeyboardAvoidingView, Keyboard, Platform, useWindowDimensions, ToastAndroid, Alert } from "react-native"
 
+/* components */
+import { Loading } from "../../../components/custom"
+import CustomizedInput from "./components/CustomizedInput"
+import { Container, Text, Input, Button, Image } from "../../../components"
 
-export default function SignUp({ navigation: { goBack }}) {
-  const [inputs, setInputs] = useState({
-    fullName: '',
-    phone: '',
-    email: '',
-    password: '',
-    enterPassword: '',
-  })
+/* implements */
+import { colors } from "../../../themes/colors"
+import { images } from "../../../themes/images"
+import { authorizationApi } from "../../../APIs"
+
+export default function SignUp({ navigation: { goBack } }) {
+
+  /* configure screen */
+  const { width } = useWindowDimensions();
+
+  /* constants */
+  const IOS = Platform.OS === "ios";
+  const ANDROID = Platform.OS === "android";
+
+  /* create state */
   const [errors, setErrors] = useState({});
+  const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false);
+  const [inputs, setInputs] = useState({
+    fullName: "",
+    phone: "",
+    email: "",
+    password: "",
+    enterPassword: "",
+  });
 
+  /* function: handle on change text for input */
   const handleOnChange = (text, input) => {
-    setInputs(prevState => ({...prevState, [input]: text}));
+    setInputs(prevState => ({ ...prevState, [input]: text }));
   };
 
+
+  /* function: handle on show error for input */
   const handleError = (ErrorMessage, input) => {
-    setErrors(prevState => ({...prevState, [input]: ErrorMessage}));
+    setErrors(prevState => ({ ...prevState, [input]: ErrorMessage }));
   }
 
-  const validateEmail = (email) => {
-    const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    return re.test(String(email).toLowerCase());
-}
-
-//validate inputs
-const validate = () => {
+  /* function: handle on validate inputs */
+  const validate = () => {
     Keyboard.dismiss();
     let valid = true;
-    let match = inputs.email.match(/\S+@\S+\.\S+/);
+    let matchedEmail = inputs.email.match(/\S+@\S+\.\S+/);
 
-    // validate phone number
-    if(!inputs.phone || inputs.phone  === null) {
-        handleError('Vui lòng nhập số điện thoại!', 'phone');
-        valid = false;
-    } else if(inputs.phone.length !== 10) {
-        handleError('Độ dài số điện thoại tối thiểu là 10', 'phone');
-        valid = false;
+    /* validate phone number */
+    if (!inputs.phone) {
+      handleError("Vui lòng nhập số điện thoại!", "phone");
+      valid = false;
+    } else if (inputs.phone.length !== 10) {
+      handleError("Độ dài số điện thoại tối thiểu là 10", "phone");
+      valid = false;
     }
 
-    // validate email and email format
-    if(!inputs.email && inputs.email === null) {
-        handleError('Vui lòng nhập Email!', 'email');
-        valid = false;
-    } else if(!inputs.email || !match ) {
-        console.log('sai email')
-        handleError('Email sai định dạng (nguyenvana@gmail.com)', 'email');
-        valid = false;
+    /* validate email and email format */
+    if (!inputs.email) {
+      handleError("Vui lòng nhập Email!", "email");
+      valid = false;
+    } else if (!matchedEmail) {
+      handleError("Email sai định dạng (nguyenvana@gmail.com)", "email");
+      valid = false;
     }
 
-    // validate name of unit of person
-    if(!inputs.fullName || inputs.fullName === null) {
-        handleError('Vui lòng nhập họ và tên!', 'fullName');
-        valid = false;
+    /* validate name of unit of person */
+    if (!inputs.fullName) {
+      handleError("Vui lòng nhập họ và tên!", "fullName");
+      valid = false;
     }
 
-    // validate password and min length password is 6
-    if(!inputs.password || inputs.password === null) {
-        handleError('Mật khẩu không được để trống!', 'password');
-        valid = false;
-    } else if(inputs.password.length < 6) {
-        handleError('Độ dài mật khẩu tối thiểu phải là 6', 'password');
-        valid = false;
+    /* validate password and min length password is 6 */
+    if (!inputs.password) {
+      handleError("Vui lòng nhập mật khẩu!", "password");
+      valid = false;
+    } else if (inputs.password.length < 6) {
+      handleError("Độ dài mật khẩu tối thiểu phải là 6", "password");
+      valid = false;
     }
 
-    // validate comparing pass and re-pass
-    if(!inputs.enterPassword || inputs.enterPassword === null) {
-        handleError('Mật khẩu không được để trống', 'enterPassword');
-        valid = false;
-    }else if(inputs.enterPassword.length < 6 ) {
-        handleError('Độ dài mật khẩu tối thiểu phải là 6', 'enterPassword');
-        valid = false;
-    } else if(inputs.enterPassword != inputs.password) {
-        handleError('Mật khẩu không khớp! vui lòng kiểm tra lại!', 'enterPassword');
-        valid = false;
+    /* validate comparing pass and re-pass */
+    if (!inputs.enterPassword) {
+      handleError("Vui lòng nhập mật khẩu!", "enterPassword");
+      valid = false;
+    } else if (inputs.enterPassword.length < 6) {
+      handleError("Độ dài mật khẩu tối thiểu phải là 6", "enterPassword");
+      valid = false;
+    } else if (inputs.enterPassword != inputs.password) {
+      handleError("Mật khẩu không khớp! vui lòng kiểm tra lại!", "enterPassword");
+      valid = false;
     }
 
-    if(valid) {
-      // logInfo('REGISTER SUCCESSFULLY: ', `${inputs.fullName}\n${inputs.phone}\n${inputs.email}\n${inputs.password}`)
-        onSubmitRegister();
+    if (valid) {
+      onSubmitRegister();
     }
-};
-
-  const onSubmitRegister = async () => {
-      setLoading(true);
-        try {
-            const response = await authorizationApi.signUp(
-              inputs.email,
-              inputs.fullName,
-              inputs.phone,
-              inputs.password,
-            );
-            console.log('get-data: ', response)
-            if(response.isSuccess == 1){
-                Alert.alert('Thông báo: ', "Đăng ký tài khoản thành công!")
-            } else {
-                Alert.alert('Thất bại: ', "Email đã tồn tại!")
-                throw new Error('Email đã tồn tại!')
-            }
-        } catch (error) {
-            console.log('catch-error: ', error)
-            // showModal(2);
-            Alert.alert('ERROR: ', "NETWORK ERROR")
-        }   
-        setLoading(false); 
-  }
-
-  const OnSignInLogo = () => {
-    return (
-      <Container mb={16} aCenter>
-        <Image square={128} source={images.SUPERIOR_LOGO} />
-        <Text headline bold color={colors.BLACK} mt={16}>
-          Đăng ký
-        </Text>
-      </Container>
-    );
   };
 
-  const OnButton = ({bgColor, color, text, onPress, icon, source}) => {
-    return (
-      <Button onPress={onPress} row r={30} mb={16}
-        width={'75%'} height={48} shadow jCenter aCenter bgColor={bgColor}>
-        {
-          icon && <Image style={{ marginRight: 8 }} square={24} source={source}/>
-        }
-        <Text body color={color} bold uppercase>{text}</Text>
-      </Button>
-    )
+  const onSetEmptyState = () => {
+    setInputs({
+      fullName: "",
+      phone: "",
+      email: "",
+      password: "",
+      enterPassword: "",
+    });
+    setMessage(null);
+    setErrors({});
+    setLoading(false);
   }
 
-  const OnBack = () => {
-    return (
-      <Text body underline mv={16}
-        onPress={() => goBack()}
-      >Trở về</Text>
-    )
+  /* function: handle on register account for user */
+  const onSubmitRegister = async () => {
+    try {
+      setLoading(true);
+      const { email, fullname, phone, password } = inputs;
+
+      const response = await authorizationApi.onSignUp(email, fullname, phone, password);
+      console.log("response-sign-in: ", response);
+      if (response.code === 0) {
+        setMessage("Địa chỉ Email đã tồn tại\nVui lòng chọn Email khác!");
+        setLoading(false);
+        return false;
+      }
+      
+      onSetEmptyState();
+      return ANDROID ? 
+        ToastAndroid.show("Đăng ký tài khoản thành công!", ToastAndroid.SHORT) :
+          Alert.alert("Thông báo", "Đăng ký tài khoản thành công!", [
+            {
+              text: "Quay về",
+              onPress: () => {},
+              style: "cancel"
+            },
+            {
+              text: "Đăng nhập ngay",
+              onPress: () => goBack(),
+              style: "default"
+            }
+          ]);
+    } catch (error) {
+      console.log("sign-in-error: ", error);
+      setMessage("Lỗi không xác định xảy ra\nVui lòng thử lại sau!");
+      setLoading(false);
+      return;
+    }
   }
-  
 
   return (
-    <Container safe bgColor={colors.WHITE}>
-       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : ''}>
-        <ScrollView>
-          <Container p={16} aCenter>
-          
-            <OnSignInLogo />
-              <InputView 
-                iconName='user'
-                placeholder='Họ và tên...'
-                error={errors.fullName}
-                onFocus={() => {
-                    handleError(null, 'fullName');
-                }}
-                onChangeText={(text) => handleOnChange(text, 'fullName')}
-              />
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={IOS && "padding"}>
+      <Container safe flex={1} bgColor={colors.BACKGROUND}>
+        <Container flex={1} p={16}>
+          <Container scrollView>
 
-              <InputView 
-                iconName='phone'
-                placeholder='Số điện thoại...'
-                keyboardType={'numeric'}
-                error={errors.phone}
-                onFocus={() => {
-                    handleError(null, 'phone');
-                }}
-                onChangeText={(text) => handleOnChange(text, 'phone')}
-              />
+            <Container aCenter mb={24}>
+              <Image square={128} source={images.SUPERIOR_LOGO} />
+              <Text headline bold color={colors.BLACK} mt={16}>
+                Đăng ký
+              </Text>
+            </Container>
 
-              <InputView 
-                iconName='mail'
-                placeholder='Địa chỉ Email...'
-                error={errors.email}
-                onFocus={() => {
-                    handleError(null, 'email');
-                }}
-                onChangeText={(text) => handleOnChange(text, 'email')}
-              />
+            <CustomizedInput
+              iconName="user"
+              placeholder="Nhập họ và tên"
+              error={errors.fullName}
+              onFocus={() => {
+                handleError(null, "fullName");
+              }}
+              value={inputs.fullName}
+              onChangeText={(text) => handleOnChange(text, "fullName")}
+            />
 
-              <InputView 
-                iconName='key'
-                placeholder='Mật khẩu...'
-                password
-                error={errors.password}
-                onFocus={() => {
-                    handleError(null, 'password');
-                }}
-                onChangeText={(text) => handleOnChange(text, 'password')}
-              />
+            <CustomizedInput
+              iconName="phone"
+              placeholder="Nhập số điện thoại"
+              keyboardType={"numeric"}
+              error={errors.phone}
+              onFocus={() => {
+                handleError(null, "phone");
+              }}
+              value={inputs.phone}
+              onChangeText={(text) => handleOnChange(text, "phone")}
+            />
 
-              <InputView 
-                iconName='lock'
-                placeholder='Nhập lại mật khẩu...'
-                password
-                error={errors.enterPassword}
-                onFocus={() => {
-                    handleError(null, 'enterPassword');
-                }}
-                onChangeText={(text) => handleOnChange(text, 'enterPassword')}
-              />
-            
-              <Container mv={24}/>
+            <CustomizedInput
+              iconName="mail"
+              placeholder="Nhập địa chỉ Email"
+              error={errors.email}
+              onFocus={() => {
+                handleError(null, "email");
+              }}
+              value={inputs.email}
+              onChangeText={(text) => handleOnChange(text, "email")}
+            />
 
-              <OnButton
-                onPress={() => {
-                  validate();
-                  // setLoading(true);
-                }}
-                bgColor={colors.PRIMARY}
-                color={colors.WHITE}
-                text={'Đăng ký'}
-              />
-              <OnBack />
-          </Container> 
-        </ScrollView>
-      </KeyboardAvoidingView>
-      {
-        loading === true && <Loading visible={true} text={'Đang đăng ký, vui lòng đợi...'} />
-      }
-    </Container>
+            <CustomizedInput
+              iconName="key"
+              placeholder="Nhập mật khẩu"
+              password
+              error={errors.password}
+              onFocus={() => {
+                handleError(null, "password");
+              }}
+              value={inputs.password}
+              onChangeText={(text) => handleOnChange(text, "password")}
+            />
+
+            <CustomizedInput
+              iconName="lock"
+              placeholder="Xác nhận mật khẩu"
+              password
+              error={errors.enterPassword}
+              onFocus={() => {
+                handleError(null, "enterPassword");
+              }}
+              value={inputs.enterPassword}
+              onChangeText={(text) => handleOnChange(text, "enterPassword")}
+            />
+
+            {
+              message ? (
+                <Container width={"100%"} r={8} p={8} mv={12} bgColor={"rgba(255, 0, 0, 0.2)"}>
+                  <Text paragraph center color={colors.TOMATO}>{message}</Text>
+                </Container>
+              ) : (
+                <Container mv={24} />
+              )
+            }
+            <Button onPress={validate} 
+              shadow 
+              jCenter aCenter 
+              row r={30} mb={16}
+              bgColor={colors.PRIMARY}
+              width={"100%"} height={48}>
+              <Text body color={colors.WHITE} bold uppercase>Đăng ký</Text>
+            </Button>
+
+            <Text onPress={() => goBack()} body center underline mv={16}>Trở về</Text>
+          </Container>
+        </Container>
+        <Loading visible={loading} text={"Đang đăng ký, vui lòng đợi..."} />
+      </Container>
+    </KeyboardAvoidingView>
   );
 }
-
-const InputView = ({ 
-  label, 
-  iconName, 
-  error, 
-  password, 
-  onFocus = () => {}, 
-  ...props 
-}) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [hidePassword, setHidePassword] = useState(password);
-  return (
-    <Container>
-      <Container width={'90%'} height={48} row center jCenter aCenter bgColor={colors.LIGHT_GREY} mt={16}
-        style={ isFocused ? { borderBottomColor: colors.PRIMARY, borderBottomWidth: 1 } : null }>
-        <Container width={'15%'} height={'100%'} bgColor={colors.PRIMARY} jCenter aCenter>
-          <AntIcon size={24} color={colors.WHITE} name={iconName} />
-        </Container>
-        <Input ph={8} paragraph width={password ? '75%' : '85%'} height={'100%'} color={colors.BLACK}
-          placeholderTextColor={colors.GREY}
-          secureTextEntry={hidePassword}
-          autoCorrect={false}
-          onFocus={() => {
-              onFocus();
-              setIsFocused(true);
-          }} 
-          onBlur={() => {
-              setIsFocused(false);
-          }}
-          {...props}
-        />
-        { password && (
-          <IonIcon 
-              name={hidePassword ? 'eye-outline' : 'eye-off-outline'}
-              style={{ width: '10%', fontSize: 24, color: colors.PRIMARY}}
-              onPress={() => setHidePassword(!hidePassword)}
-          />
-        )}
-      </Container>
-      {
-        error && (
-            <Text width={'100%'} color={colors.TOMATO} caption right>
-              {error}
-            </Text>
-        )
-          
-      }
-    </Container>
-    
-      
-  )
-}
-
-const styles = StyleSheet.create({})

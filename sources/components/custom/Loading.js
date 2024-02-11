@@ -1,9 +1,12 @@
-import React from 'react'
-import { StyleSheet, useWindowDimensions, ActivityIndicator } from 'react-native';
-import Container from '../Container';
-import Text from '../Text'
-import { colors } from '../../themes/colors';
+import React from "react"
+import { StyleSheet, useWindowDimensions, ActivityIndicator } from "react-native"
 
+/* components */
+import Text from "../Text"
+import Container from "../Container"
+
+/* implements */
+import { colors } from "../../themes/colors"
 
 const Loading = ({ visible = false, text }) => {
     const { height, width } = useWindowDimensions();
@@ -11,30 +14,28 @@ const Loading = ({ visible = false, text }) => {
     return visible && (
         <Container style={[ styles.container, { height, width }]}>
             <Container style={styles.loader}>
-                <ActivityIndicator size={'small'} color={colors.PRIMARY} />
+                <ActivityIndicator size={"small"} color={colors.PRIMARY} />
                 <Text color={colors.PRIMARY} size={14} ml={8}>{text}</Text>
             </Container>
         </Container> 
-    ) 
-            
-    
+    )   
 }
 
 const styles = StyleSheet.create({
     container: {
-        position: 'absolute',
         zIndex: 10,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        justifyContent: 'center',
+        position: "absolute",
+        backgroundColor: "rgba(0,0,0,0.5)",
+        justifyContent: "center",
     },
     loader: {
-        height: 70,
-        flexDirection: 'row',
-        backgroundColor: colors.WHITE,
-        marginHorizontal: 50,
+        height: 72,
         borderRadius: 6,
-        alignItems: 'center',
-        justifyContent: 'center'
+        flexDirection: "row",
+        marginHorizontal: 40,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: colors.WHITE,
     },
 });
 

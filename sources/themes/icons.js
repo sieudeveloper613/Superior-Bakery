@@ -13,5 +13,6 @@ export const icons = {
     BURGER_ICON: require('../assets/icons/burger.png'),
     DRINK_ICON: require('../assets/icons/drink.png'),
     DISH_ICON: require('../assets/icons/dish.png'),
-    EMPTY_AVATAR_ICON: require('../assets/icons/empty-avatar.png')
+    EMPTY_AVATAR_ICON: require('../assets/icons/empty-avatar.png'),
+    VOUCHER_ICON: require('../assets/icons/voucher-icon.png')
 }

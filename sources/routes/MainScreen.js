@@ -7,17 +7,16 @@ import {
     NOTIFICATION,
     FAVORITE_SCREEN,
     ORDERING_HISTORY_SCREEN,
-    VOUCHER_SCREEN,
     ABOUT_ME_SCREEN,
     SEARCHING_SCREEN,
     CATEGORY,
-    CART
+    CART,
+    VOUCHERS,
 } from './ScreenName'
 import { 
   MainHome,
   Favorite,
   OrderingHictory,
-  Voucher,
   AboutUs,
   Searching,
 } from '../screens/home';
@@ -44,6 +43,7 @@ import {
   OrderState,
   FinishedOrder
 } from '../screens/home/Cart'
+import { MainVoucher, VoucherDetail } from '../screens/home/Vouchers';
 
 
 const Stack = createNativeStackNavigator();
@@ -76,7 +76,8 @@ function MainScreen() {
 
         <Stack.Screen name={FAVORITE_SCREEN} component={Favorite} />
         <Stack.Screen name={ORDERING_HISTORY_SCREEN} component={OrderingHictory} />
-        <Stack.Screen name={VOUCHER_SCREEN} component={Voucher} />
+        <Stack.Screen name={VOUCHERS.MAIN_VOUCHER_SCREEN} component={MainVoucher} />
+        <Stack.Screen name={VOUCHERS.VOUCHER_DETAIL_SCREEN} component={VoucherDetail} />
         <Stack.Screen name={ABOUT_ME_SCREEN} component={AboutUs} />
         <Stack.Screen name={SEARCHING_SCREEN} component={Searching} />
       </Stack.Navigator>

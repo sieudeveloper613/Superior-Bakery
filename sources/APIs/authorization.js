@@ -1,144 +1,145 @@
-import { logDebug, logError, logInfo } from "../utils/console";
-import { BASE_URL } from "./url";
-import axios from 'axios';
+import axios from "axios"
+import { BASE_URL } from "./url"
 
- const signIn = async (email, password) => {
+ const onSignIn = async (email = "", password = "") => {
     try {
-        logInfo('PARAMS-SIGN-IN: ', email, password);
-        const onData = await axios.post(`${BASE_URL}/api/signIn`, {
+        console.log("sign-in-params: ", { email, password });
+
+        const request = await axios.post(`${BASE_URL}/api/signIn`, {
             email,
             password
         });
-        logInfo('FETCHING-DATA: ', onData);
-        return onData.data;
+
+        return request.data;
     } catch (error) {
-        logError('GOT-AN-ERROR', error)
+        console.log("on-sign-in-error: ", error)
+        return;
     }
 }
 
- const signUp = async (email, fullname, phone, password) => {
+ const onSignUp = async (email = "", fullname = "", phone = "", password = "") => {
     try {
-        logInfo('PARAMS-SIGN-UP: ', email, fullname, phone, password);
-        const onData = await axios.post(`${BASE_URL}/api/signUp`, {
+        console.log("sign-up-params: ", { email, fullname, phone, password });
+        const request = await axios.post(`${BASE_URL}/api/signUp`, {
             email,
             fullname,
             phone,
             password
         });
-        logInfo('FETCHING-DATA: ', onData);
-        return onData.data;
+
+        return request.data;
     } catch (error) {
-        logError('GOT-AN-ERROR', error)
+        console.log("on-sign-in-error: ", error)
+        return;
     }
 }
 
-const getInfo = async (email) => {
+const onGetInfo = async (email = "") => {
     try {
-        logInfo('PARAMS-GET-INFO: ', email);
-        const onData = await axios.post(`${BASE_URL}/api/user-info`,{
-            email,
-        });
-        logInfo('FETCHING-DATA: ', onData.data);
-        return onData.data;
+        console.log("get-infor-params: ", { email });
+
+        const request = await axios.get(`${BASE_URL}/api/getUserInfo?email=${email}`);
+        return request.data;
     } catch (error) {
-        logError('GOT-AN-ERROR', error)
+        console.log("on-get-infor-error: ", error);
+        return;
     }
 }
 
 const changePassword = async (email, oldPassword, newPassword) => {
-    logDebug('params-change-password: ', email, oldPassword, newPassword)
+    console.log("params-change-password: ", email, oldPassword, newPassword)
     try {
         const onData = await axios.post(`${BASE_URL}/api/change-password`, {
             email,
             oldPassword,
             newPassword
         })
-        logInfo('FETCHING-DATA: ', onData.data);
+        console.log("FETCHING-DATA: ", onData.data);
         return onData.data;
     } catch (error) {
-        logError('change-password-error: ', error);
+        console.log("change-password-error: ", error);
     }
 }
 
 const updateInfo = async (id, fullname, phone) => {
     try {
-        logDebug('params-update-info: ', id, fullname, phone)
+        console.log("params-update-info: ", id, fullname, phone)
         const onData = await axios.post(`${BASE_URL}/api/update-info`, {
             id,
             fullname,
             phone,
         })
-        logInfo('FETCHING-DATA: ', onData.data);
+        console.log("FETCHING-DATA: ", onData.data);
         return onData.data;
     } catch (error) {
-        logError('update-info-error: ', error);
+        console.log("update-info-error: ", error);
     }
 }
 
 const insertAddress = async (id, address, ward, district, city, type, typeName) => {
     try {
-        logDebug('insert-address-params: ', id, address, ward, district, city, type, typeName);
+        console.log("insert-address-params: ", id, address, ward, district, city, type, typeName);
         const onInsert = await axios.post(`${BASE_URL}/api/insert-address`, {
             id, address, ward, district, city, type, typeName
         });
-        logInfo('insert-address-data: ', onInsert.data);
+        console.log("insert-address-data: ", onInsert.data);
         return onInsert.data;
     } catch (error) {
-        logError('insert-address-error: ', error);
+        console.log("insert-address-error: ", error);
     }
 }
 
 const collectAddress = async (userId) => {
     try {
-        logDebug('collect-address-params: ', userId);
+        console.log("collect-address-params: ", userId);
         const onCollect = await axios.get(`${BASE_URL}/api/collect-address-by-id?id=${userId}`)
-        logInfo('collect-address-data: ', onCollect.data);
+        console.log("collect-address-data: ", onCollect.data);
         return onCollect.data;
     } catch (error) {
-        logError('collect-address-error: ', error);
+        console.log("collect-address-error: ", error);
     }
 }
 
 const updateAddress = async (id, idAddress, address, ward, district, city, type, typeName) => {
     try {
-        logDebug('update-address-params: ', id, idAddress, address, ward, district, city, type, typeName);
+        console.log("update-address-params: ", id, idAddress, address, ward, district, city, type, typeName);
         const onUpdate = await axios.post(`${BASE_URL}/api/update-address-by-id`, {
             id, idAddress, address, ward, district, city, type, typeName
         });
-        logInfo('update-address-data: ', onUpdate.data);
+        console.log("update-address-data: ", onUpdate.data);
         return onUpdate.data;
     } catch (error) {
-        logError('update-address-error: ', error);
+        console.log("update-address-error: ", error);
     }
 }
 
 const removeAddress = async (userId, idAddress) => {
     try {
-        logDebug('remove-address-params: ', userId, idAddress);
+        console.log("remove-address-params: ", userId, idAddress);
         const onRemove = await axios.post(`${BASE_URL}/api/remove-address-by-id`, {
             id: userId,
             idAddress: idAddress,
         });
-        logInfo('remove-address-data: ', onRemove.data);
+        console.log("remove-address-data: ", onRemove.data);
         return onRemove.data;
     } catch (error) {
-        logError('remove-address-error: ', error);
+        console.log("remove-address-error: ", error);
     }
 }
 
 const uploadAvatar = async (userId, imageUri) => {
     try {
-        logInfo('params-upload-avatar: ', userId, imageUri)
+        console.log("params-upload-avatar: ", userId, imageUri)
         const formData = new FormData();
-        formData.append('image', {
+        formData.append("image", {
             uri: imageUri,
-            type: 'image/jpeg',
-            name: 'avatar.jpg',
+            type: "image/jpeg",
+            name: "avatar.jpg",
         });
-        formData.append('id', userId);
+        formData.append("id", userId);
         const response = await axios.post(`${BASE_URL}/api/update-avatar`, formData, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                "Content-Type": "multipart/form-data",
               },
         });
         return response.data;
@@ -148,9 +149,9 @@ const uploadAvatar = async (userId, imageUri) => {
   };
 
 export default {
-    signIn,
-    signUp,
-    getInfo,
+    onSignIn,
+    onSignUp,
+    onGetInfo,
     changePassword,
     updateInfo,
     insertAddress,

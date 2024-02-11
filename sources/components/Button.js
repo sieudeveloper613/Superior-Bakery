@@ -142,6 +142,8 @@ const Button = ({
     {borderLeftColor: blColor},
     {borderRightColor: brColor},
     {backgroundColor: bgColor},
+    dashed && {borderStyle: 'dashed'},
+    dotted && {borderStyle: 'dotted'},
     jStart && {justifyContent: 'flex-start'},
     jCenter && {justifyContent: 'center'},
     jEnd && {justifyContent: 'flex-end'},

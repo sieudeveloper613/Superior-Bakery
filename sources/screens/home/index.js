@@ -3,7 +3,7 @@ import UserProfile from "./UserProfile";
 import Notification from "./Notification";
 import Favorite from "./Favorite";
 import OrderingHictory from "./OrderingHictory";
-import Voucher from "./Voucher";
+import Vouchers from './Vouchers'
 import AboutUs from "./AboutUs";
 import Searching from "./Searching";
 
@@ -13,7 +13,7 @@ export {
   Notification,
   Favorite,
   OrderingHictory,
-  Voucher,
+  Vouchers,
   AboutUs,
   Searching
 }

@@ -7,9 +7,9 @@ import { colors } from '../../../../../themes/colors';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
 
-const HeaderName = ({ onPress = () => {}, label, color }) => {
+const HeaderName = ({ onPress = () => {}, label, color, disabled }) => {
     const navigation = useNavigation();
-    const [disabled, setDisabled] = useState(false);
+   
     return (
         <Container row width={'100%'} between>
             <Button
@@ -22,10 +22,9 @@ const HeaderName = ({ onPress = () => {}, label, color }) => {
                 numberOfLines={2} 
                 width={'60%'} center size={18} bold color={colors.PRIMARY}>{label}</Text>
             <Button
-                disabled={disabled ? true : false}
+                disabled={disabled}
                 onPress={() => {
                     onPress();
-                    setDisabled(true);
                 }} 
                 width={36} height={36} r={36/2}
                 bgColor={colors.WHITE} shadow jCenter aCenter>
